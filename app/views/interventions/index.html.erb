@@ -1,0 +1,51 @@
+<div class= "container">
+<p id="notice"><%= notice %></p>
+
+<h1>Interventions</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Author</th>
+      <th>Customerid</th>
+      <th>Buildingid</th>
+      <th>Batteryid</th>
+      <th>Columnid</th>
+      <th>Elevatorid</th>
+      <th>Employeeid</th>
+      <th>Startdateandtimeofintervention</th>
+      <th>Enddateandtimeofintervention</th>
+      <th>Result</th>
+      <th>Report</th>
+      <th>Status</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @interventions.each do |intervention| %>
+      <tr>
+        <td><%= intervention.author %></td>
+        <td><%= intervention.customerID %></td>
+        <td><%= intervention.buildingID %></td>
+        <td><%= intervention.batteryID %></td>
+        <td><%= intervention.columnID %></td>
+        <td><%= intervention.elevatorID %></td>
+        <td><%= intervention.employeeID %></td>
+        <td><%= intervention.startDateAndTimeOfIntervention %></td>
+        <td><%= intervention.endDateAndTimeOfIntervention %></td>
+        <td><%= intervention.result %></td>
+        <td><%= intervention.report %></td>
+        <td><%= intervention.status %></td>
+        <td><%= link_to 'Show', intervention %></td>
+        <td><%= link_to 'Edit', edit_intervention_path(intervention) %></td>
+        <td><%= link_to 'Destroy', intervention, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Intervention', new_intervention_path %>
+</div>

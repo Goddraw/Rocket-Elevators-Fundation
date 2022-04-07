@@ -108,9 +108,6 @@ class LeadsController < ApplicationController
         filename = File.basename(f)
         attachments.push(File.new(f, 'rb')) 
       end  
-
-      site = RestClient::Resource.new(ENV['FRESHDESK_URL'], ENV["FRESHDESK_API_KEY"], 'X')
-      url = ENV['FRESHDESK_URL']
     
       respond_to do |format|
         if @lead.save
@@ -130,8 +127,9 @@ class LeadsController < ApplicationController
     
               request = RestClient::Request.execute(
                 method: :post,
-                url: 'https://rocketelevatorsai.freshdesk.com/api/v2/tickets',
-                user: ENV["FRESHDESK_API_KEY"],
+                url: "https://ericgaudreault2.freshdesk.com/api/v2/tickets",
+                user: 'u0H2hLL9guCy8wynShM',
+                # user: ENV["FRESHDESK_API_KEY"]
                 password: 'X',
                 payload: data,
                 headers: {"Content-Type" => 'multipart/form-data'}
@@ -161,8 +159,8 @@ class LeadsController < ApplicationController
     
               request = RestClient::Request.execute(
                 method: :post,
-                url: "https://rocketelevatorsai.freshdesk.com/api/v2/tickets",
-                user: ENV["FRESHDESK_API_KEY"],
+                url: "https://ericgaudreault2.freshdesk.com/api/v2/tickets",
+                user: 'u0H2hLL9guCy8wynShM',
                 password: 'X',
                 payload: data_json,
                 headers: {"Content-Type" => 'application/json'}
