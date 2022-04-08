@@ -14,7 +14,7 @@ namespace :custom do
   end
 
 set :application, "EricGaudreault"
-set :repo_url, "git@github.com:xa2113/Rocket_Elevators_API.git"
+set :repo_url, "https://github.com/Goddraw/Rocket-Elevators-Fundation.git"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
