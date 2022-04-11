@@ -34,7 +34,7 @@ class InterventionsController < ApplicationController
   # POST /interventions or /interventions.json
   def create
     @intervention = Intervention.new(intervention_params)
-    #respond_to do |format|
+    respond_to do |format|
       if @intervention.save
 
         author = Employee.find(@intervention.author)
@@ -69,46 +69,33 @@ class InterventionsController < ApplicationController
           @intervention.report = "n/a"
         end
 
-      #     data = {
-      #       "status": 2, 
-      #       "priority": 1,
-      #       "email": "admin@rocketelevators.com",
-      #       "description": 
-      #         "A new intervention has been submitted by employee " + authorName + " for the company, " + companyName + ". The building ID is " + @intervention.buildingID.to_s + "; battery ID is " + @intervention.batteryID.to_s + ". The column ID is " + @intervention.columnID.to_s + ". The elevator ID is " + @intervention.elevatorID.to_s + ". The employee to be assigned to the task is " + employeeName + ". Description of the request for the intervention is: " + @intervention.report, 
-      #       "type": "Incident",
-      #       "subject": "New intervention submitted for building No." + @intervention.buildingID.to_s
-      #     }
+          data = {
+            "status": 2, 
+            "priority": 1,
+            "email": "admin@rocketelevators.com",
+            "description": 
+              "A new intervention has been submitted by employee " + authorName + " for the company, " + companyName + ". The building ID is " + @intervention.buildingID.to_s + "; battery ID is " + @intervention.batteryID.to_s + ". The column ID is " + @intervention.columnID.to_s + ". The elevator ID is " + @intervention.elevatorID.to_s + ". The employee to be assigned to the task is " + employeeName + ". Description of the request for the intervention is: " + @intervention.report, 
+            "type": "Incident",
+            "subject": "New intervention submitted for building No." + @intervention.buildingID.to_s
+          }
 
-      #     puts data
-      #     data_json = JSON.generate(data)
-      #       request = RestClient::Request.execute(
-      #         method: :post,
-      #         url: ENV["FRESHDESK_API_KEY"],
-      #         user: ENV["FRESHDESK_URL"],
-      #         password: 'X',
-      #         payload: data_json,
-      #         headers: {"Content-Type" => 'application/json'}
-      #       )
+          puts data
+          data_json = JSON.generate(data)
+            request = RestClient::Request.execute(
+              method: :post,
+              url: ENV["FRESHDESK_URL"],
+              user: ENV["FRESHDESK_API_KEY"],
+              password: 'X',
+              payload: data_json,
+              headers: {"Content-Type" => 'application/json'}
+            )
   
-      #       logger.debug "----------- #{request.code} --------------"
+            logger.debug "----------- #{request.code} --------------"
 
-      #   format.html { redirect_to root_path, notice: "Intervention was successfully created." }
-      #   format.json { render :show, status: :created, location: @intervention }
-      # else
-      #   format.html { render :new, status: :unprocessable_entity }
-      #   format.json { render json: @intervention.errors, status: :unprocessable_entity }
-      end
-    # end
-  end
-
-  # PATCH/PUT /interventions/1 or /interventions/1.json
-  def update
-    respond_to do |format|
-      if @intervention.update(intervention_params)
-        format.html { redirect_to intervention_url(@intervention), notice: "Intervention was successfully updated." }
-        format.json { render :show, status: :ok, location: @intervention }
+        format.html { redirect_to root_path, notice: "Intervention was successfully created." }
+        format.json { render :show, status: :created, location: @intervention }
       else
-        format.html { render :edit, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @intervention.errors, status: :unprocessable_entity }
       end
     end
