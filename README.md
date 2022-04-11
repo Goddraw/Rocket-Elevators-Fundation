@@ -120,6 +120,8 @@ Once your code is complete, you can go on the Rocket Elevators’ website, fill 
 
 When a potential customer submits their contact information through the Contact Us form on the home page, or when he/she calculates a quote using the quote form, all the information, including any attachments from the contact form, are sent to Freshdesk to allow Rocket Elevators to manage their leads and quotes more easily.
 
+When an employee fills out an intervention form, an email is sent in a form of a ticket with all the informations from the form to Freshdesk so that the follow-ups are easier to do and keep track of.
+
 Please contact us for login credentials to the freshdesk console.
 
 ### AWS Polly
