@@ -83,8 +83,8 @@ class InterventionsController < ApplicationController
           data_json = JSON.generate(data)
             request = RestClient::Request.execute(
               method: :post,
-              url: "https://ericgaudreault2.freshdesk.com/api/v2/tickets",
-              user: "GkQBme7HCyRe2RROkUnP",
+              url: ENV["FRESHDESK_API_KEY"],
+              user: ENV["FRESHDESK_URL"],
               password: 'X',
               payload: data_json,
               headers: {"Content-Type" => 'application/json'}

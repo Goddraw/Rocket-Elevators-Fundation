@@ -127,8 +127,8 @@ class LeadsController < ApplicationController
     
               request = RestClient::Request.execute(
                 method: :post,
-                url: "https://ericgaudreault2.freshdesk.com/api/v2/tickets",
-                user: 'u0H2hLL9guCy8wynShM',
+                url: ENV["FRESHDESK_URL"],
+                user: ENV["FRESHDESK_API_KEY"],
                 # user: ENV["FRESHDESK_API_KEY"]
                 password: 'X',
                 payload: data,
