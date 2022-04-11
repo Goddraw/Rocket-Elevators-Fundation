@@ -21,6 +21,10 @@ class InterventionsController < ApplicationController
     @intervention = Intervention.new
     @customer = Customer.all
     @building = Building.all
+    @battery = Battery.all
+    @column = Column.all
+    @elevator = Elevator.all
+    @employee = Employee.all
   end
 
   # GET /interventions/1/edit
@@ -30,11 +34,65 @@ class InterventionsController < ApplicationController
   # POST /interventions or /interventions.json
   def create
     @intervention = Intervention.new(intervention_params)
-
     respond_to do |format|
       if @intervention.save
 
-        format.html { redirect_to intervention_url(@intervention), notice: "Intervention was successfully created." }
+        author = Employee.find(@intervention.author)
+        authorName = author.first_name + " " + author.last_name
+        if @intervention.customerID != nil 
+          companyName = Customer.find(@intervention.customerID).Company_Name
+        else
+          companyName = "n/a"
+        end
+        if @intervention.buildingID == nil
+          @intervention.buildingID = "n/a"
+        end
+        if @intervention.batteryID == nil
+          @intervention.batteryID = "n/a"
+        end
+        if @intervention.columnID == nil
+          @intervention.columnID = "n/a"
+        end
+        if @intervention.elevatorID == nil
+          @intervention.elevatorID = "n/a"
+        end
+        
+        if @intervention.employeeID == nil
+          @intervention.employeeID = "n/a"
+          employeeName = "n/a"
+        else
+          employee = Employee.find(@intervention.employeeID)
+          employeeName = employee.first_name + " " + employee.last_name
+        end
+
+        if @intervention.report == nil
+          @intervention.report = "n/a"
+        end
+
+          data = {
+            "status": 2, 
+            "priority": 1,
+            "email": "admin@rocketelevators.com",
+            "description": 
+              "A new intervention has been submitted by employee " + authorName + " for the company, " + companyName + ". The building ID is " + @intervention.buildingID.to_s + "; battery ID is " + @intervention.batteryID.to_s + ". The column ID is " + @intervention.columnID.to_s + ". The elevator ID is " + @intervention.elevatorID.to_s + ". The employee to be assigned to the task is " + employeeName + ". Description of the request for the intervention is: " + @intervention.report, 
+            "type": "Incident",
+            "subject": "New intervention submitted for building No." + @intervention.buildingID.to_s
+          }
+
+          puts data
+          data_json = JSON.generate(data)
+            request = RestClient::Request.execute(
+              method: :post,
+              url: "https://ericgaudreault2.freshdesk.com/api/v2/tickets",
+              user: "GkQBme7HCyRe2RROkUnP",
+              password: 'X',
+              payload: data_json,
+              headers: {"Content-Type" => 'application/json'}
+            )
+  
+            logger.debug "----------- #{request.code} --------------"
+
+        format.html { redirect_to root_path, notice: "Intervention was successfully created." }
         format.json { render :show, status: :created, location: @intervention }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -59,20 +117,38 @@ class InterventionsController < ApplicationController
 
 
 
+#Get buildings for dropdown menu
+  def get_buildings
+    @buildings = Building.where("customer_id = ?", params[:customer_id])
+    respond_to do |format|
+      format.json { render :json => @buildings }
+    end
+  end 
 
-  # def get_buildings_by_customer
-  #   @Buildings = Building.where("customer_id = ?", params[:customerID])
-  #   respond_to do |format|
-  #     format.json { render :json => @Buildings }
-  #   end
-  # end 
-  # def building_search
-  #   if params[:customer].present? && params[:customer].strip != ""
-  #     @Buildings = Customer.where("customer_id = ?", params[:customer])
-  #   else
-  #     @Buildings = Building.all
-  #   end
-  # end
+#Get batteries for dropdown menu
+def get_batteries
+  @batteries = Battery.where("building_id = ?", params[:building_id])
+  respond_to do |format|
+    format.json { render :json => @batteries }
+  end
+end 
+
+#Get columns for dropdownmenu
+def get_columns
+  @columns = Column.where("battery_id = ?", params[:battery_id])
+  respond_to do |format|
+    format.json { render :json => @columns }
+  end
+end 
+
+#Get elevators for dropdownmenu
+
+def get_elevators
+  @elevators = Elevator.where("column_id = ?", params[:column_id])
+  respond_to do |format|
+    format.json { render :json => @elevators }
+  end
+end 
 
   # DELETE /interventions/1 or /interventions/1.json
   def destroy
@@ -83,6 +159,15 @@ class InterventionsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  #The gets for my ajax calls
+  def get_building_by_customer
+    @building = Building.where("customer_id = ?", params[:customer_id])
+    respond_to do |format|
+        format.json { render :json => @building }
+    end
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -98,5 +183,3 @@ class InterventionsController < ApplicationController
 
 
 end
-
-

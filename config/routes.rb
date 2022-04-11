@@ -49,9 +49,12 @@ Rails.application.routes.draw do
 # config/routes.rb
 
 # Rails.application.routes.draw do
-
-  match 'get_building_by_customers' => 'interventions#get_buildings_by_customer', via: [:get]  
-  match '/building_search' => 'interventions#building_search', via: [:get] 
+  resources :interventions, :except => [:destroy, :edit, :update, :show]
+  
+  get 'interventions/get_buildings/:customer_id', to: 'interventions#get_buildings'
+  get 'interventions/get_batteries/:building_id', to: 'interventions#get_batteries'
+  get 'interventions/get_columns/:battery_id', to: 'interventions#get_columns'
+  get 'interventions/get_elevators/:column_id', to: 'interventions#get_elevators'
 
 #  end
 

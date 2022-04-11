@@ -30,6 +30,7 @@ Rails.application.config.assets.precompile += %w( index.js )
 Rails.application.config.assets.precompile += %w( quote.css )
 Rails.application.config.assets.precompile += %w( map.js )
 Rails.application.config.assets.precompile += %w( map.css )
+Rails.application.config.assets.precompile += %w( intervention.js )
 # Rails.application.config.assets.precompile += %w( indexslides.js )
 
 

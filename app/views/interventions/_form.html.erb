@@ -1,4 +1,6 @@
 <%= form_with(model: intervention, local: true) do |form| %>
+  <%# <%= javascript_include_tag('intervention.js') %>
+  
   <% if intervention.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(intervention.errors.count, "error") %> prohibited this intervention from being saved:</h2>
@@ -11,7 +13,10 @@
     </div>
   <% end %>
 
-
+<div class="field">
+    <%= form.label :author, "Your Employee ID:" %>
+    <%= form.number_field :author%>
+</div>
 
   <%#Customer dropdown list %>
   <div class="field">
@@ -27,83 +32,70 @@
 
   <%#Building dropdown list %>
   <div class="field">
-    <%= form.label :Building_ID %>
+    <%= form.label :buildingID %>
     <div id = "building">
     </div>
   </div>
-  <%= form.select(:building_id) do %>
+  <%= form.select(:buildingID) do %>
   <% @building.each do |l| -%>
-  <%= content_tag(:option, l.adress_id, value: l.id) %>
+  <%= content_tag(:option, l.id, value: l.id) %>
   <% end %>
   <% end %>
 
-  <div class="field" id="building_type" onchange="selectBuildingType()">
-    <% building_type_options = [["--select--","select"], ["Residential", "residential"], ["Commercial", "commercial"], ["Corporate", "corporate"], ["Hybrid", "hybrid"]]%>
-    <%= form.label :building_type %>
-    <%# select_tag :building_type, options_for_select(building_type_options) %>
-    <div onchange="selectBuildingType()" >
-    <%= form.select(:building_type, options_for_select(building_type_options)) %>
-    </div>
-  </div>
-
-  <div class="field">
-    <%= form.label :author %>
-    <%= form.text_field :author %>
-  </div>
-
-  <div class="field">
-    <%= form.label :customerID %>
-    <%= form.text_field :customerID %>
-  </div>
-
-  <div class="field">
-    <%= form.label :buildingID %>
-    <%= form.text_field :buildingID %>
-  </div>
-
+  <%#Battery dropdown list %>
   <div class="field">
     <%= form.label :batteryID %>
-    <%= form.text_field :batteryID %>
+    <div id = "battery">
+    </div>
   </div>
+  <%= form.select(:batteryID) do %>
+  <% @battery.each do |l| -%>
+  <%= content_tag(:option, l.id, value: l.id) %>
+  <% end %>
+  <% end %>
 
+  <%#Column dropdown list %>
   <div class="field">
-    <%= form.label :columnID %>
-    <%= form.text_field :columnID %>
+    <%= form.label :column_ID %>
+    <div id = "column">
+    </div>
   </div>
+  <%= form.select(:columnID) do %>
+  <% @column.each do |l| -%>
+  <%= content_tag(:option, l.id, value: l.id) %>
+  <% end %>
+  <% end %>
 
+  <%#Elevator dropdown list %>
   <div class="field">
     <%= form.label :elevatorID %>
-    <%= form.text_field :elevatorID %>
+    <div id = "column">
+    </div>
   </div>
+  <%= form.select(:elevatorID) do %>
+  <option value="">==None==</option>
+  <% @elevator.each do |l| -%>
+  <%= content_tag(:option, l.id, value: l.id) %>
+  <% end %>
+  <% end %>
 
+  <%#Employee dropdown list %>
   <div class="field">
     <%= form.label :employeeID %>
-    <%= form.text_field :employeeID %>
   </div>
-
-  <div class="field">
-    <%= form.label :startDateAndTimeOfIntervention %>
-    <%= form.datetime_select :startDateAndTimeOfIntervention %>
-  </div>
-
-  <div class="field">
-    <%= form.label :endDateAndTimeOfIntervention %>
-    <%= form.datetime_select :endDateAndTimeOfIntervention %>
-  </div>
-
-  <div class="field">
-    <%= form.label :result %>
-    <%= form.text_field :result %>
+  <div class="field" id="employee">
+   
+    <%= form.select(:employeeID) do %>
+    <option value="">==None==</option>
+    <% @employee.each do |l| -%>
+    <%= content_tag(:option, l.first_name + " " + l.last_name, value: l.id) %>
+    <% end %>
+    <% end %>
   </div>
 
   <div class="field">
     <%= form.label :report %>
     <%= form.text_area :report %>
-  </div>
-
-  <div class="field">
-    <%= form.label :status %>
-    <%= form.text_field :status %>
   </div>
 
   <div class="actions">
@@ -112,64 +104,140 @@
 <% end %>
 
 <script>
-$(function() {
-   $("#intervention_customer_id").change(function() {
-    // var id_value_string = $(this).val();
-    // if (id_value_string == "") {
-    //  $("select#building option").remove();
-    //  var row = "<option value=\"" + "" + "\">" + "Building" + "</option>";
-    //  $(row).appendTo("select#building");
-    // } else {
-     // Send the request and update building dropdown
-     $.ajax({
-      dataType: "json",
-      cache: false,
-      url: '/get_buildings_by_customer/',
-      timeout: 5000,
-      error: function(XMLHttpRequest, errorTextStatus, error) {
-       alert("Failed to submit : " + errorTextStatus + " ;" + error);
-      },
-      success: function(data) {
-        console.log("Im here")
-        console.log(data)
-       //put in a empty default line
-       var row = "<option value=\"" + "" + "\">" + "Building" + "</option>";
-       $(row).appendTo("#building");
-       // Fill building select
-       $.each(data, function(i, j) {
-        row = "<option value=\"" + j.id + "\">" + j.title + "</option>";
-        $(row).appendTo("#building");
-       });
-      }
-     });
-   });
+function get_buildings() {
+    console.log("jexiste////////////////////////////////////////////////////////////")
+    var id_value_string = $(this).val();
+    if (id_value_string == "") {
+        $("select#intervention_buildingID option").remove();
+        var row = "<option value=\"" + "" + "\">" + "Building" + "</option>";
+        $(row).appendTo("#intervention_buildingID");
+    } else {
+        //Send the request and update building dropdown
+        $.ajax({
+            dataType: "json",
+            cache: false,
+            url: 'get_buildings/' + id_value_string,
+            timeout: 5000,
+            error: function (XMLHttpRequest, errorTextStatus, error) {
+                alert("Failed to submit : " + errorTextStatus + " ;" + error);
+            },
+            success: function (data) {
+                console.log("Im here")
+                console.log(data)
+                $("select#intervention_buildingID option").remove();
+                //put in a empty default line
+                // var row = "<option value=\"" + "" + "\">" + "Building" + "</option>";
+                // $(row).appendTo("#intervention_building_id");
+                // Fill building select
+                $.each(data, function (i, j) {
+                    row = "<option value=\"" + j.id + "\">" + j.id + "</option>";
+                    $(row).appendTo("#intervention_buildingID");
+                });
+                $("select#intervention_buildingID option").change();
+            }
+        });
+    }
+}
 
-  });  
-    
-    
-    
-    
-    
-    
-// Example of ajax code  : Need match in routes, and get method, controller logic to get the buildings.
-    // $.ajax({
-		// type: "GET",
-		// url: url, 
-		// contentType: "application/json; charset-utf-8",
-		// dataType: "json",
-		// success: function(data) {
-		//   $('#zone').empty();
-		//   $('#zone').append("<option value=''>- Select Zone-</option>");
-		//   $.each(data, function(i,item){
-		// 	var selecting=''; 
-		// 	if ($('#dis').val().findIndex(x => x==data[i].id)>=0) {
-		// 	  selecting = ' selected="selected"'; 
-		// 	} else {
-		// 	  selecting = '';
-		// 	}
-		// 	$('#zone').append('<option '+selecting+' value="'+data[i].id+'">'+data[i].name+'</optoin>');
-		//   });
-		// }, 
-		// complete: function() {}
-	  // }); 
+function get_batteries() {
+    console.log("test............................................................................................")
+    var id_value_string = $(this).val();
+    if (id_value_string == "") {
+        $("select#intervention_batteryID option").remove();
+        var row = "<option value=\"" + "" + "\">" + "Battery" + "</option>";
+        $(row).appendTo("#intervention_batteryID");
+    } else {
+        //Send the request and update building dropdown
+        $.ajax({
+            dataType: "json",
+            cache: false,
+            url: 'get_batteries/' + id_value_string,
+            timeout: 5000,
+            error: function (XMLHttpRequest, errorTextStatus, error) {
+                alert("Failed to submit : " + errorTextStatus + " ;" + error);
+            },
+            success: function (data) {
+                $("select#intervention_batteryID option").remove();
+                //put in a empty default line
+                // var row = "<option value=\"" + "" + "\">" + "Building" + "</option>";
+                // $(row).appendTo("#intervention_building_id");
+                // Fill building select
+                $.each(data, function (i, j) {
+                    row = "<option value=\"" + j.id + "\">" + j.id + "</option>";
+                    $(row).appendTo("#intervention_batteryID");
+                });
+                $("select#intervention_batteryID option").change();
+            }
+        });
+    }
+}
+
+function get_columns() {
+    var id_value_string = $(this).val();
+    if (id_value_string == "") {
+        $("select#intervention_columnID option").remove();
+        var row = "<option value=\"" + "" + "\">" + "Column" + "</option>";
+        $(row).appendTo("#intervention_columnID");
+    } else {
+        //Send the request and update building dropdown
+        $.ajax({
+            dataType: "json",
+            cache: false,
+            url: 'get_columns/' + id_value_string,
+            timeout: 5000,
+            error: function (XMLHttpRequest, errorTextStatus, error) {
+                alert("Failed to submit : " + errorTextStatus + " ;" + error);
+            },
+            success: function (data) {
+                $("select#intervention_columnID option").remove();
+                //put in a empty default line
+                // var row = "<option value=\"" + "" + "\">" + "Building" + "</option>";
+                // $(row).appendTo("#intervention_building_id");
+                // Fill building select
+                $.each(data, function (i, j) {
+                    row = "<option value=\"" + j.id + "\">" + j.id + "</option>";
+                    $(row).appendTo("#intervention_columnID");
+                });
+                $("select#intervention_columnID option").change();
+            }
+        });
+    }
+}
+
+function get_elevators() {
+    var id_value_string = $(this).val();
+    if (id_value_string == "") {
+        $("select#intervention_elevatorID option").remove();
+        var row = "<option value=\"" + "" + "\">" + "Elevator" + "</option>";
+        $(row).appendTo("#intervention_elevatorID");
+    } else {
+        //Send the request and update building dropdown
+        $.ajax({
+            dataType: "json",
+            cache: false,
+            url: 'get_elevators/' + id_value_string,
+            timeout: 5000,
+            error: function (XMLHttpRequest, errorTextStatus, error) {
+                alert("Failed to submit : " + errorTextStatus + " ;" + error);
+            },
+            success: function (data) {
+                $("select#intervention_elevatorID option").remove();
+                //put in a empty default line
+                // var row = "<option value=\"" + "" + "\">" + "Building" + "</option>";
+                // $(row).appendTo("#intervention_building_id");
+                // Fill building select
+                $.each(data, function (i, j) {
+                    row = "<option value=\"" + j.id + "\">" + j.id + "</option>";
+                    $(row).appendTo("#intervention_elevatorID");
+                });
+                $("select#intervention_elevatorID option").change();
+            }
+        });
+    }
+}
+
+$("#intervention_customerID").change(get_buildings);
+$("#intervention_buildingID").change(get_batteries);
+$("#intervention_batteryID").change(get_columns);
+$("#intervention_columnID").change(get_elevators);
 </script>
