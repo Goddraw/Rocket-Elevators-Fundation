@@ -94,15 +94,7 @@
                     <!-- THEMATIC -->
                     <a class="dropdown-toggle noicon" id="contact-nav" href="/#contact"> CONTACT </a>
                   </li>
-                  <li
-                    class="dropdown mega-menu nav-animate-fadeIn nav-hover-animate hover-animate-bounceIn"
-                  >
-                  <!-- THEMATIC -->
-                    <a class="dropdown-toggle noicon" id="contact-nav" href="/interventions"> INTERVENTION </a>
-                  </li>
-                  <li
-                    class="dropdown mega-menu nav-animate-fadeIn nav-hover-animate hover-animate-bounceIn"
-                  >
+                  
                   
                     
                     <% if user_signed_in? %>
@@ -117,6 +109,15 @@
                   >
                     <% if user_signed_in? and current_user.admin? %>
                   <%= link_to "ADMIN", rails_admin_path %>
+                  <li
+                    class="dropdown mega-menu nav-animate-fadeIn nav-hover-animate hover-animate-bounceIn"
+                  >
+                  <!-- THEMATIC -->
+                    <a class="dropdown-toggle noicon" id="contact-nav" href="/interventions"> INTERVENTION </a>
+                  </li>
+                  <li
+                    class="dropdown mega-menu nav-animate-fadeIn nav-hover-animate hover-animate-bounceIn"
+                  >
                     <% end %>
                     
                   
