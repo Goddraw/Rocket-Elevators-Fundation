@@ -34,7 +34,7 @@ class InterventionsController < ApplicationController
   # POST /interventions or /interventions.json
   def create
     @intervention = Intervention.new(intervention_params)
-    respond_to do |format|
+    #respond_to do |format|
       if @intervention.save
 
         author = Employee.find(@intervention.author)
@@ -98,7 +98,7 @@ class InterventionsController < ApplicationController
       #   format.html { render :new, status: :unprocessable_entity }
       #   format.json { render json: @intervention.errors, status: :unprocessable_entity }
       end
-    end
+    # end
   end
 
   # PATCH/PUT /interventions/1 or /interventions/1.json
